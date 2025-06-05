@@ -1,0 +1,15 @@
+{
+  "name": "cyrillic-calculator",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "calculator",
+    "cyrillic-numbers"
+  ],
+  "author": "Ivan Hrytsenko <ivan.hrytsenko123@gmail.com>",
+  "license": "ISC",
+  "description": ""
+}
