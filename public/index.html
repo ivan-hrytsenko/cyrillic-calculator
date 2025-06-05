@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyrillic Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="display" id="calculator-display"></div>
+        <div class="buttons">
+            <div class="operation-row">
+                <button class="button clear-button" data-type="clear" data-value="C">C</button>
+                <button class="button operation-button" data-type="operation" data-value="/">/</button>
+                <button class="button operation-button" data-type="operation" data-value="*">*</button>
+                <button class="button operation-button" data-type="operation" data-value="-">-</button>
+                <button class="button operation-button" data-type="operation" data-value="+">+</button>
+                <button class="button equals-button" data-type="equals" data-value="=">=</button>
+            </div>
+
+            <div class="hundreds-row">
+                <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="Р">Р</button> <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="С">С</button> <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="Т">Т</button> <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="У">У</button> <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="Ф">Ф</button> </div>
+
+            <div class="hundreds-row">
+                <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="Х">Х</button> <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="Ц">Ц</button> <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="Ѱ">Ѱ</button> <button class="button hundred-digit-button" data-type="cyrillic-digit" data-value="Ѡ">Ѡ</button> </div>
+
+            <div class="tens-row">
+                <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="І">І</button> <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="К">К</button> <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="Л">Л</button> <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="М">М</button> <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="Н">Н</button> </div>
+
+            <div class="tens-row">
+                <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="Ѯ">Ѯ</button> <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="О">О</button> <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="П">П</button> <button class="button ten-digit-button" data-type="cyrillic-digit" data-value="Ч">Ч</button> </div>
+
+            <div class="units-row">
+                <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="А">А</button> <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="В">В</button> <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="Г">Г</button> <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="Д">Д</button> <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="Є">Є</button> </div>
+
+            <div class="units-row">
+                <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="Ѕ">Ѕ</button> <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="З">З</button> <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="И">И</button> <button class="button unit-digit-button" data-type="cyrillic-digit" data-value="Ѳ">Ѳ</button> </div>
+        </div>
+    </div>
+
+    <script src="../src/ui/app.js"></script>
+</body>
+</html>
