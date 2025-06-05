@@ -1,9 +1,9 @@
 {
   "name": "cyrillic-calculator",
   "version": "1.0.0",
-  "main": "src/app.js",
+  "main": "src/ui/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "open public/index.html"
   },
   "keywords": [
     "calculator",
