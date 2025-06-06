@@ -1,5 +1,5 @@
 import { convertCyrillicToArabic, convertArabicToCyrillic } from '../core/converter.js';
-import { calculate, OPERATION_ADD, OPERATION_SUBTRACT, OPERATION_MULTIPLY, OPERATION_DIVIDE } from '../core/calculator.js';
+import { calculate } from '../core/calculator.js';
 
 const calculatorDisplay = document.getElementById('calculator-display');
 const buttonsContainer = document.querySelector('.buttons');
