@@ -102,14 +102,19 @@ const handleButtonClick = (event) => {
     const type = target.dataset.type;
     const value = target.dataset.value;
 
-    if (type === 'clear') {
-        resetCalculator();
-    } else if (type === 'cyrillic-digit') {
-        handleDigitInput(value);
-    } else if (type === 'operation') {
-        handleOperation(value);
-    } else if (type === 'equals') {
-        handleEquals();
+    switch (type) {
+        case 'clear':
+            resetCalculator();
+            break;
+        case 'cyrillic-digit':
+            handleDigitInput(value);
+            break;
+        case 'operation':
+            handleOperation(value);
+            break;
+        case 'equals':
+            handleEquals();
+            break;
     }
 };
 
