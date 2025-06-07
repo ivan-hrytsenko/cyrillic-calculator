@@ -74,6 +74,5 @@ const convertArabicToCyrillic = (arabicNumber) => {
 
 export {
   convertCyrillicToArabic,
-  convertArabicToCyrillic,
-  splitArabicNumber
+  convertArabicToCyrillic
 };
