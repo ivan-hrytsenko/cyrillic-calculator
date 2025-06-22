@@ -7,7 +7,7 @@ const buttonsContainer = document.querySelector('.buttons');
 let currentInput = '';
 let firstOperand = null;
 let operator = null;
-let waitingForSecondOperand = false;
+let waitingForNextOperand = false;
 let resultDisplayed = false;
 
 const updateDisplay = (value) => {
@@ -18,78 +18,76 @@ const resetCalculator = () => {
     currentInput = '';
     firstOperand = null;
     operator = null;
-    waitingForSecondOperand = false;
+    waitingForNextOperand = false;
     resultDisplayed = false;
-    updateDisplay('Пусто');
+    updateDisplay();
+};
+
+const handleError = () => {
+    updateDisplay('Помилка');
+    resetCalculator();
 };
 
 const handleDigitInput = (digitCyrillic) => {
-    if (resultDisplayed) {
-        currentInput = '';
-        resultDisplayed = false;
-    }
-    
-    if (currentInput === 'Пусто') {
-        currentInput = '';
+    switch (true) {
+        case waitingForNextOperand:
+            currentInput = digitCyrillic;
+            waitingForNextOperand = false;
+            break;
+        case resultDisplayed:
+            currentInput = digitCyrillic;
+            resultDisplayed = false;
+            break;
+        default:
+            currentInput += digitCyrillic;
     }
 
-    if (waitingForSecondOperand) {
-        currentInput = digitCyrillic;
-        waitingForSecondOperand = false;
-    } else {
-        currentInput += digitCyrillic;
-    }
     updateDisplay(currentInput);
 };
 
 const handleOperation = (nextOperator) => {
     const inputValue = convertCyrillicToArabic(currentInput);
 
-    if (operator && waitingForSecondOperand) {
-        operator = nextOperator;
-        updateDisplay('Пусто');
-        return;
-    }
-
     if (firstOperand === null) {
         firstOperand = inputValue;
-    } else if (operator) {
+    } else if (operator !== null && !waitingForNextOperand) {
         const result = calculate(firstOperand, inputValue, operator);
-        if (Number.isNaN(result)) {
-            updateDisplay('Помилка');
-            resetCalculator();
+        const roundedResult = Math.round(result);
+        if (Number.isNaN(roundedResult)) {
+            handleError();
             return;
         }
-        firstOperand = result;
-        resultDisplayed = true;
+        updateDisplay(convertArabicToCyrillic(roundedResult));
+        firstOperand = roundedResult;
     }
 
+    currentInput = '';
     operator = nextOperator;
-    waitingForSecondOperand = true;
-    updateDisplay('Пусто');
+    waitingForNextOperand = true;
 };
 
 const handleEquals = () => {
-    const inputValue = convertCyrillicToArabic(currentInput);
-
-    if (firstOperand === null || operator === null || waitingForSecondOperand) {
+    if (firstOperand === null || operator === null || waitingForNextOperand) {
         return;
     }
 
+    const inputValue = convertCyrillicToArabic(currentInput || '0');
     const result = calculate(firstOperand, inputValue, operator);
-    if (Number.isNaN(result)) {
-        updateDisplay('Помилка');
-    } else {
-        if (result === 0) {
-            updateDisplay('Пусто');
-        } else {
-            updateDisplay(convertArabicToCyrillic(result));
-        }
+    const roundedResult = Math.round(result);
+    if (Number.isNaN(roundedResult)) {
+        handleError();
+        return;
     }
-    
-    firstOperand = result;
+
+    if (roundedResult === 0) {
+        updateDisplay();
+    } else {
+        updateDisplay(convertArabicToCyrillic(roundedResult));
+    }
+
+    firstOperand = roundedResult;
     operator = null;
-    waitingForSecondOperand = false;
+    waitingForNextOperand = false;
     resultDisplayed = true;
 };
 
@@ -119,5 +117,4 @@ const handleButtonClick = (event) => {
 };
 
 buttonsContainer.addEventListener('click', handleButtonClick);
-
 resetCalculator();

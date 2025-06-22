@@ -17,9 +17,9 @@ const calculate = (firstOperand, secondOperand, operation) => {
             result = firstOperand * secondOperand;
             break;
         case OPERATION_DIVIDE:
-            //if (secondOperand === 0) {
-            //  return NaN;
-            //}
+            /*if (secondOperand === 0) {
+                return NaN;
+            }*/
             result = firstOperand / secondOperand;
             break;
         default:
