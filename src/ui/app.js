@@ -52,11 +52,11 @@ const handleOperation = (nextOperator) => {
         firstOperand = inputValue;
     } else if (operator !== null && !waitingForNextOperand) {
         const result = calculate(firstOperand, inputValue, operator);
-        const roundedResult = Math.round(result);
-        if (Number.isNaN(roundedResult)) {
+        if (Number.isNaN(result)) {
             handleError();
             return;
         }
+        const roundedResult = Math.round(result);
         updateDisplay(convertArabicToCyrillic(roundedResult));
         firstOperand = roundedResult;
     }
@@ -73,12 +73,11 @@ const handleEquals = () => {
 
     const inputValue = convertCyrillicToArabic(currentInput || '0');
     const result = calculate(firstOperand, inputValue, operator);
-    const roundedResult = Math.round(result);
-    if (Number.isNaN(roundedResult)) {
+    if (Number.isNaN(result)) {
         handleError();
         return;
     }
-
+    const roundedResult = Math.round(result);
     if (roundedResult === 0) {
         updateDisplay();
     } else {
