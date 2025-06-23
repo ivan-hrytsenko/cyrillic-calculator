@@ -71,7 +71,7 @@ const handleEquals = () => {
         return;
     }
 
-    const inputValue = convertCyrillicToArabic(currentInput || '0');
+    const inputValue = convertCyrillicToArabic(currentInput);
     const result = calculate(firstOperand, inputValue, operator);
     if (Number.isNaN(result)) {
         handleError();
@@ -95,9 +95,7 @@ const handleButtonClick = (event) => {
     if (!target.classList.contains('button')) {
         return;
     }
-
-    const type = target.dataset.type;
-    const value = target.dataset.value;
+    const { type, value } = target.dataset
 
     switch (type) {
         case 'clear':
