@@ -25,7 +25,7 @@ const resetCalculator = () => {
 
 const handleError = () => {
     updateDisplay('Помилка');
-    resetCalculator();
+    setTimeout(resetCalculator, 2000);
 };
 
 const handleDigitInput = (digitCyrillic) => {
