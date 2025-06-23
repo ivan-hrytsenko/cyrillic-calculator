@@ -32,7 +32,7 @@ const convertCyrillicToArabic = (cyrillicNumber) => {
 const splitArabicNumber = (arabicNumber) => {
     const parsedNumber = Number(arabicNumber);
 
-    if (Number.isNaN(parsedNumber) || parsedNumber < 0 || parsedNumber > MAX_NUMBER_VALUE) {
+    if (Number.isNaN(parsedNumber) || parsedNumber < MIN_NUMBER_VALUE || parsedNumber > MAX_NUMBER_VALUE) {
         return { hundreds: 0, tens: 0, units: 0 };
     }
 
