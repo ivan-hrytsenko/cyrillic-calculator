@@ -1,8 +1,11 @@
 import { convertCyrillicToArabic, convertArabicToCyrillic } from '../core/converter.js';
 import { calculate } from '../core/calculator.js';
+import { EventEmitter } from '../core/eventEmitter.js';
 
 const calculatorDisplay = document.getElementById('calculator-display');
 const buttonsContainer = document.querySelector('.buttons');
+
+const calculatorEvents = new EventEmitter();
 
 let currentInput = '';
 let firstOperand = null;
@@ -11,7 +14,9 @@ let waitingForNextOperand = false;
 let resultDisplayed = false;
 
 const updateDisplay = (value) => {
-    calculatorDisplay.textContent = value || 'Пусто';
+    const displayValue = value || 'Empty';
+    calculatorDisplay.textContent = displayValue;
+    calculatorEvents.emit('displayUpdated', displayValue);
 };
 
 const resetCalculator = () => {
@@ -20,15 +25,18 @@ const resetCalculator = () => {
     operator = null;
     waitingForNextOperand = false;
     resultDisplayed = false;
-    updateDisplay();
+    updateDisplay('');
+    calculatorEvents.emit('calculatorReset');
 };
 
-const handleError = () => {
-    updateDisplay('Помилка');
+const handleError = (errorMessage = 'Error') => {
+    updateDisplay(errorMessage);
+    calculatorEvents.emit('calculatorError', errorMessage);
     setTimeout(resetCalculator, 2000);
 };
 
 const handleDigitInput = (digitCyrillic) => {
+    const oldInput = currentInput;
     switch (true) {
         case waitingForNextOperand:
             currentInput = digitCyrillic;
@@ -41,29 +49,41 @@ const handleDigitInput = (digitCyrillic) => {
         default:
             currentInput += digitCyrillic;
     }
-
     updateDisplay(currentInput);
+    calculatorEvents.emit('digitInput', { digit: digitCyrillic, oldInput: oldInput, newInput: currentInput });
 };
 
 const handleOperation = (nextOperator) => {
     const inputValue = convertCyrillicToArabic(currentInput);
 
+    if (isNaN(inputValue)) {
+        handleError('Invalid number');
+        return;
+    }
+
     if (firstOperand === null) {
         firstOperand = inputValue;
     } else if (operator !== null && !waitingForNextOperand) {
-        const result = calculate(firstOperand, inputValue, operator);
-        if (Number.isNaN(result)) {
-            handleError();
+        const calculatedResult = calculate(firstOperand, inputValue, operator);
+        if (Number.isNaN(calculatedResult)) {
+            handleError('Calculation error');
             return;
         }
-        const roundedResult = Math.round(result);
+        const roundedResult = Math.round(calculatedResult);
         updateDisplay(convertArabicToCyrillic(roundedResult));
         firstOperand = roundedResult;
+        calculatorEvents.emit('operationPerformed', {
+            operand1: firstOperand,
+            operand2: inputValue,
+            operator: operator,
+            result: roundedResult
+        });
     }
 
     currentInput = '';
     operator = nextOperator;
     waitingForNextOperand = true;
+    calculatorEvents.emit('operatorSelected', nextOperator);
 };
 
 const handleEquals = () => {
@@ -72,14 +92,19 @@ const handleEquals = () => {
     }
 
     const inputValue = convertCyrillicToArabic(currentInput);
-    const result = calculate(firstOperand, inputValue, operator);
-    if (Number.isNaN(result)) {
-        handleError();
+    if (isNaN(inputValue)) {
+        handleError('Invalid number');
         return;
     }
-    const roundedResult = Math.round(result);
+
+    const calculatedResult = calculate(firstOperand, inputValue, operator);
+    if (Number.isNaN(calculatedResult)) {
+        handleError('Calculation error');
+        return;
+    }
+    const roundedResult = Math.round(calculatedResult);
     if (roundedResult === 0) {
-        updateDisplay();
+        updateDisplay('');
     } else {
         updateDisplay(convertArabicToCyrillic(roundedResult));
     }
@@ -88,6 +113,7 @@ const handleEquals = () => {
     operator = null;
     waitingForNextOperand = false;
     resultDisplayed = true;
+    calculatorEvents.emit('equalsPressed', roundedResult);
 };
 
 const handleButtonClick = (event) => {
@@ -96,6 +122,8 @@ const handleButtonClick = (event) => {
         return;
     }
     const { type, value } = target.dataset
+
+    calculatorEvents.emit('buttonClicked', { type, value });
 
     switch (type) {
         case 'clear':
@@ -115,3 +143,37 @@ const handleButtonClick = (event) => {
 
 buttonsContainer.addEventListener('click', handleButtonClick);
 resetCalculator();
+
+calculatorEvents.on('displayUpdated', (displayValue) => {
+    console.log(`[EVENT] Display updated: "${displayValue}"`);
+});
+
+calculatorEvents.on('calculatorReset', () => {
+    console.log('[EVENT] Calculator reset.');
+});
+
+calculatorEvents.on('digitInput', ({ digit, oldInput, newInput }) => {
+    console.log(`[EVENT] Digit entered: "${digit}". Input changed: "${oldInput}" -> "${newInput}".`);
+});
+
+calculatorEvents.on('operationPerformed', ({ operand1, operand2, operator, result }) => {
+    console.log(`[EVENT] Operation performed: ${operand1} ${operator} ${operand2} = ${result}`);
+});
+
+calculatorEvents.on('calculatorError', (msg) => {
+    console.error(`[EVENT] CALCULATOR ERROR: ${msg}`);
+});
+
+calculatorEvents.on('buttonClicked', ({ type, value }) => {
+    console.log(`[EVENT] Button clicked: Type="${type}", Value="${value}"`);
+});
+
+const temporaryListener = (result) => {
+    console.log(`[EVENT - Temporary] "=" pressed, result: ${result}`);
+};
+const unsubscribeTemp = calculatorEvents.on('equalsPressed', temporaryListener);
+
+setTimeout(() => {
+    unsubscribeTemp();
+    console.log('[EVENT] Temporary "equalsPressed" listener unsubscribed.');
+}, 5000);
