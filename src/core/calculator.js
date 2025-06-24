@@ -1,3 +1,5 @@
+import { memoize } from './memoize.js';
+
 const OPERATION_ADD = '+';
 const OPERATION_SUBTRACT = '-';
 const OPERATION_MULTIPLY = '*';
@@ -28,4 +30,6 @@ const calculate = (firstOperand, secondOperand, operation) => {
     return result;
 };
 
-export { calculate };
+const memoizedCalculate = memoize(calculate)
+
+export { memoizedCalculate };
