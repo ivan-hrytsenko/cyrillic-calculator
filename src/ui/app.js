@@ -1,5 +1,5 @@
 import { convertCyrillicToArabic, convertArabicToCyrillic } from '../core/converter.js';
-import { memoizedCalculate } from '../core/calculator.js';
+import { calculate } from '../core/calculator.js';
 
 const calculatorDisplay = document.getElementById('calculator-display');
 const buttonsContainer = document.querySelector('.buttons');
@@ -51,7 +51,7 @@ const handleOperation = (nextOperator) => {
     if (firstOperand === null) {
         firstOperand = inputValue;
     } else if (operator !== null && !waitingForNextOperand) {
-        const result = memoizedCalculate(firstOperand, inputValue, operator);
+        const result = calculate(firstOperand, inputValue, operator);
         if (Number.isNaN(result)) {
             handleError();
             return;
@@ -72,7 +72,7 @@ const handleEquals = () => {
     }
 
     const inputValue = convertCyrillicToArabic(currentInput);
-    const result = memoizedCalculate(firstOperand, inputValue, operator);
+    const result = calculate(firstOperand, inputValue, operator);
     if (Number.isNaN(result)) {
         handleError();
         return;
